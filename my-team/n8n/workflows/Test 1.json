@@ -36,10 +36,24 @@
         460,
         300
       ]
+    },
+    {
+      "parameters": {
+        "path": "test-suren",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        780,
+        280
+      ],
+      "webhookId": "6cf2a023-8713-455a-ad48-c871d74c1cae"
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-01-19T10:53:57.516Z"
+  "updatedAt": "2023-01-19T11:12:07.269Z"
 }
