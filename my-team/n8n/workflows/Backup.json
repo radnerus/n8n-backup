@@ -116,17 +116,6 @@
         ]
       ]
     },
-    "Daily @ 20:00": {
-      "main": [
-        [
-          {
-            "node": "Globals",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "GitHub Create": {
       "main": [
         [
@@ -186,6 +175,17 @@
       ]
     },
     "Start": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Every one hour": {
       "main": [
         [
           {
@@ -403,24 +403,6 @@
     },
     {
       "parameters": {
-        "triggerTimes": {
-          "item": [
-            {
-              "mode": "everyHour"
-            }
-          ]
-        }
-      },
-      "name": "Daily @ 20:00",
-      "type": "n8n-nodes-base.cron",
-      "position": [
-        -480,
-        500
-      ],
-      "typeVersion": 1
-    },
-    {
-      "parameters": {
         "batchSize": 1,
         "options": {}
       },
@@ -459,10 +441,28 @@
         350
       ],
       "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyHour"
+            }
+          ]
+        }
+      },
+      "name": "Every one hour",
+      "type": "n8n-nodes-base.cron",
+      "position": [
+        -480,
+        500
+      ],
+      "typeVersion": 1
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-01-19T10:50:34.152Z"
+  "updatedAt": "2023-01-19T10:52:34.858Z"
 }
