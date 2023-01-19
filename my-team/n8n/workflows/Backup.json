@@ -406,8 +406,7 @@
         "triggerTimes": {
           "item": [
             {
-              "hour": 20,
-              "minute": 11
+              "mode": "everyHour"
             }
           ]
         }
@@ -465,5 +464,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-01-19T10:47:57.512Z"
+  "updatedAt": "2023-01-19T10:50:34.152Z"
 }
