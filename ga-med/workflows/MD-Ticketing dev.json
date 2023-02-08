@@ -1,0 +1,438 @@
+{
+  "active": false,
+  "connections": {
+    "Jira Trigger": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Red_Bird API": {
+      "main": [
+        [
+          {
+            "node": "MD-Ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ticket_No": {
+      "main": [
+        [
+          {
+            "node": "Red_Bird API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MD-Ticket": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Ticket_No",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Jira",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres": {
+      "main": [
+        [
+          {
+            "node": "Postgres1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Jira": {
+      "main": [
+        [
+          {
+            "node": "Postgres2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres2": {
+      "main": [
+        [
+          {
+            "node": "Postgres11",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "attachment check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "attachment check": {
+      "main": [
+        [],
+        [
+          {
+            "node": "get existing attachment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get existing attachment": {
+      "main": [
+        [
+          {
+            "node": "Check Existing Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Existing Record": {
+      "main": [
+        [
+          {
+            "node": "insert attachment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-02-02T08:36:21.051Z",
+  "id": "12",
+  "name": "MD-Ticketing dev",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -3080,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "events": [
+          "jira:issue_updated",
+          "comment_updated",
+          "comment_created"
+        ],
+        "additionalFields": {}
+      },
+      "name": "Jira Trigger",
+      "type": "n8n-nodes-base.jiraTrigger",
+      "typeVersion": 1,
+      "position": [
+        -2880,
+        580
+      ],
+      "webhookId": "289d495f-53eb-4ec8-807c-af315ec83dc8",
+      "credentials": {
+        "jiraSoftwareCloudApi": {
+          "id": "2",
+          "name": "Jira SW Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://md-ticketing-redbird.cardinality.info/content/labels",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "text",
+              "value": "= {{$node[\"Jira Trigger\"].json[\"issue\"][\"fields\"][\"summary\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Red_Bird API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -2240,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api-md-ticketing-dev.cardinalityai.xyz/api/incidentreport/addincidentreportdetail",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={\n\t\"received_type\": \"Jira\",\n\t\"jira_id\" : \"{{$node[\"Jira Trigger\"].json[\"issue\"][\"id\"]}}\"\t,\n\t\"jira_key\": \"{{$node[\"Jira Trigger\"].json[\"issue\"][\"key\"]}}\",\t\t\t\t\t\n\t\"short_desc\": \"{{$node[\"Jira Trigger\"].json[\"issue\"][\"fields\"][\"summary\"]}}\",\n\t\"ticket_no\": \"{{$node[\"Ticket_No\"].json[\"ticket_number\"]}}\",\n\t\"category\":\"{{$json[\"category\"]}}\",\n\t\"subcategory\": \"{{$json[\"sub_category\"]}}\",\n\t\"contact_type\": \"Jira\",\n\t\"priority\": \"{{$node[\"Jira Trigger\"].json[\"issue\"][\"fields\"][\"priority\"][\"name\"]}}\",\n\t\"status\": \"{{$node[\"Jira Trigger\"].json[\"issue\"][\"fields\"][\"status\"][\"name\"]}}\",\n\t\"severity\": \"Level 1\"\n}"
+      },
+      "name": "MD-Ticket",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -2020,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select * from mdcrm.getticketno();",
+        "additionalFields": {}
+      },
+      "name": "Ticket_No",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        -2440,
+        420
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "9",
+          "name": "Postgres Dev"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=SELECT  * FROM incidentreport WHERE ticket_no = '{{$node[\"Ticket_No\"].json[\"ticket_number\"]}}'",
+        "additionalFields": {}
+      },
+      "name": "Postgres",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        -1800,
+        420
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "9",
+          "name": "Postgres Dev"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"issue_event_type_name\"]}}",
+              "value2": "issue_created"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -2680,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "issueKey": "={{$node[\"Jira Trigger\"].json[\"issue\"][\"key\"]}}",
+        "additionalFields": {}
+      },
+      "name": "Jira",
+      "type": "n8n-nodes-base.jira",
+      "typeVersion": 1,
+      "position": [
+        -2440,
+        680
+      ],
+      "credentials": {
+        "jiraSoftwareCloudApi": {
+          "id": "2",
+          "name": "Jira SW Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=\nINSERT INTO mdcrm.jira_activity\n(incidentreportid, activity_action, activity_comments, jira_id, jira_key, activeflag, insertedby, insertedon, updatedby, updatedon, assignedto, assignedby)\nVALUES('{{$node[\"Postgres\"].json[\"incidentreportid\"]}}', 'JIRA Ticket', '', '{{$node[\"Jira Trigger\"].json[\"issue\"][\"id\"]}}', '{{$node[\"Jira Trigger\"].json[\"issue\"][\"key\"]}}', 1, 'Jira System', now(), 'Jira Syatem', now(), null, '{{$node[\"Jira Trigger\"].json[\"issue\"][\"fields\"][\"reporter\"][\"displayName\"]}}');\n\n\nINSERT INTO mdcrm.incident_activity\n(activity_action, activity_comments, incidentreportid, jira_key, assignedto, assignedby, insertedby, insertedon)\nVALUES('JIRA Ticket', 'Created JIRA {{$node[\"Jira Trigger\"].json[\"issue\"][\"key\"]}}' , '{{$node[\"Postgres\"].json[\"incidentreportid\"]}}', '{{$node[\"Jira Trigger\"].json[\"issue\"][\"key\"]}}', null, '{{$node[\"Jira Trigger\"].json[\"issue\"][\"fields\"][\"reporter\"][\"displayName\"]}}', 'JIRA Board',now());",
+        "additionalFields": {}
+      },
+      "name": "Postgres1",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        -1580,
+        420
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "9",
+          "name": "Postgres Dev"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=UPDATE incidentreport SET status = case when '{{$node[\"Jira\"].json[\"fields\"][\"status\"][\"name\"]}}' in ('To Do','In Progress') then 'Open'\nwhen '{{$node[\"Jira\"].json[\"fields\"][\"status\"][\"name\"]}}' = 'Done'  then 'Resolve' else 'Open' end  WHERE incidentreportid= '{{$node[\"Postgres2\"].json[\"incidentreportid\"]}}';\n\n\nINSERT INTO mdcrm.jira_activity\n(incidentreportid, activity_action, activity_comments, jira_id, jira_key, activeflag, insertedby, insertedon, updatedby, updatedon, assignedto, assignedby)\nVALUES('{{$node[\"Postgres2\"].json[\"incidentreportid\"]}}', 'JIRA Ticket', '{{$node[\"Jira\"].json[\"fields\"][\"comment\"][\"comments\"].slice(-1)[0][\"body\"]}}', '{{$node[\"Jira\"].json[\"id\"]}}', '{{$node[\"Jira\"].json[\"key\"]}}', 1, 'Jira System', now(), 'Jira Syatem', now(), '{{$node[\"Jira\"].json[\"fields\"][\"assignee\"][\"displayName\"]}}', '{{$node[\"Jira\"].json[\"fields\"][\"reporter\"][\"displayName\"]}}');\n\n\nINSERT INTO mdcrm.incident_activity\n(activity_action, activity_comments, incidentreportid, jira_key, assignedto, assignedby, insertedby, insertedon)\nVALUES(case when '{{$node[\"Jira\"].json[\"fields\"][\"status\"][\"name\"]}}' = 'Done' then 'Resolve' else '{{$node[\"Postgres2\"].json[\"status\"]}}' end, '{{$node[\"Jira\"].json[\"fields\"][\"comment\"][\"comments\"].slice(-1)[0][\"body\"]}}' , '{{$node[\"Postgres2\"].json[\"incidentreportid\"]}}', '{{$node[\"Jira\"].json[\"key\"]}}', '{{$node[\"Jira\"].json[\"fields\"][\"assignee\"][\"displayName\"]}}', '{{$node[\"Jira\"].json[\"fields\"][\"reporter\"][\"displayName\"]}}', 'JIRA Board',now() AT TIME ZONE 'america/new_york')\nON CONFLICT DO NOTHING;",
+        "additionalFields": {}
+      },
+      "name": "Postgres11",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        -1880,
+        680
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "9",
+          "name": "Postgres Dev"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=SELECT  * FROM incidentreport WHERE jira_key = '{{$node[\"Jira\"].json[\"key\"]}}'",
+        "additionalFields": {}
+      },
+      "name": "Postgres2",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        680
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "9",
+          "name": "Postgres Dev"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Jira\"].json[\"fields\"][\"attachment\"]}}",
+              "operation": "isEmpty"
+            }
+          ]
+        }
+      },
+      "name": "attachment check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -2160,
+        900
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=select count(*) from mdcrm.\"document\" WHERE jira_doc_id = '{{$node[\"Jira\"].json[\"fields\"][\"attachment\"].slice(-1)[0][\"id\"]}}' AND ticket_no = '{{$node[\"Postgres2\"].json[\"ticket_no\"]}}'",
+        "additionalFields": {}
+      },
+      "name": "get existing attachment",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        -1880,
+        920
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "9",
+          "name": "Postgres Dev"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=INSERT INTO mdcrm.\"document\"\n(ticket_no, s3url, filename, filetype, numberofbytes, file_date, activeflag,createdbyid, createddate, jira_doc_id)\nvalues( '{{$node[\"Postgres2\"].json[\"ticket_no\"]}}', '{{$node[\"Jira\"].json[\"fields\"][\"attachment\"].slice(-1)[0][\"content\"]}}', '{{$node[\"Jira\"].json[\"fields\"][\"attachment\"].slice(-1)[0][\"filename\"]}}', '{{$node[\"Jira\"].json[\"fields\"][\"attachment\"].slice(-1)[0][\"mimeType\"]}}', '{{$node[\"Jira\"].json[\"fields\"][\"attachment\"].slice(-1)[0][\"size\"]}}',now() AT TIME ZONE 'america/new_york', 1, 'JIRA_Board',now() AT TIME ZONE 'america/new_york','{{$node[\"Jira\"].json[\"fields\"][\"attachment\"].slice(-1)[0][\"id\"]}}');",
+        "additionalFields": {}
+      },
+      "name": "insert attachment",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        -1340,
+        900
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "9",
+          "name": "Postgres Dev"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"count\"]}}",
+              "value2": "0"
+            }
+          ],
+          "number": []
+        }
+      },
+      "name": "Check Existing Record",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -1620,
+        920
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-02-02T10:33:18.088Z"
+}
