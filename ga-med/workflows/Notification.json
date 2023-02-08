@@ -1,0 +1,287 @@
+{
+  "active": false,
+  "connections": {
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "IF2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "Sms77",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF2": {
+      "main": [
+        [
+          {
+            "node": "Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-01-23T06:14:57.862Z",
+  "id": "9",
+  "name": "Notification",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        120,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "from": "={{$node[\"Set\"].json[\"fromNumber\"]}}",
+        "to": "={{$node[\"Set\"].json[\"toNumber\"]}}",
+        "message": "={{$node[\"Set\"].json[\"smsText\"]}}",
+        "options": {}
+      },
+      "name": "Sms77",
+      "type": "n8n-nodes-base.sms77",
+      "typeVersion": 1,
+      "position": [
+        960,
+        160
+      ],
+      "credentials": {
+        "sms77Api": {
+          "id": "7",
+          "name": "Sms77 account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$json[\"fromMail\"]}}",
+        "toEmail": "={{$json[\"toMail\"]}}",
+        "subject": "={{$json[\"subject\"]}}",
+        "text": "={{$json[\"text\"]}}",
+        "html": "={{$json[\"htmlContent\"]}}",
+        "attachments": "=",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        960,
+        -40
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "5",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "fromMail",
+              "value": "admin@cardinality.ai"
+            },
+            {
+              "name": "toMail",
+              "value": "ayyappan@cardinality.ai"
+            },
+            {
+              "name": "subject",
+              "value": "Test Email"
+            },
+            {
+              "name": "text",
+              "value": "This Is Test Mail"
+            },
+            {
+              "name": "htmlContent",
+              "value": "<p id=\"i7oj\" style=\"box-sizing: border-box;\"> Thanks for contacting LTSS contact support <div style=\"box-sizing: border-box;\"> <br style=\"box-sizing: border-box;\"> </div><div style=\"box-sizing: border-box;\"> <br style=\"box-sizing: border-box;\"> </div><div style=\"box-sizing: border-box;\">Your ticket number is. </div></p>"
+            },
+            {
+              "name": "fromNumber",
+              "value": "+919047470871"
+            },
+            {
+              "name": "toNumber",
+              "value": "+919500160871"
+            },
+            {
+              "name": "smsText",
+              "value": "This is test msg"
+            },
+            {
+              "name": "slackText",
+              "value": "Hello!"
+            },
+            {
+              "name": "slackChannel",
+              "value": "bot-grp-test"
+            },
+            {
+              "name": "slackOperation",
+              "value": "post"
+            }
+          ],
+          "boolean": [
+            {
+              "name": "sms",
+              "value": "={{false}}"
+            },
+            {
+              "name": "email",
+              "value": "={{true}}"
+            },
+            {
+              "name": "slack",
+              "value": "={{true}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        360,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json[\"email\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        660,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json[\"sms\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        660,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "channel": "={{$node[\"Set\"].json[\"slackChannel\"]}}",
+        "text": "={{$node[\"Set\"].json[\"slackText\"]}}",
+        "attachments": [],
+        "otherOptions": {}
+      },
+      "name": "Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [
+        960,
+        360
+      ],
+      "credentials": {
+        "slackApi": {
+          "id": "6",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json[\"slack\"]}}",
+              "value2": "={{true}}"
+            }
+          ]
+        }
+      },
+      "name": "IF2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        660,
+        380
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-01-23T06:20:57.076Z"
+}
