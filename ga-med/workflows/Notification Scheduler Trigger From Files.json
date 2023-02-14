@@ -1,5 +1,5 @@
 {
-  "active": true,
+  "active": false,
   "connections": {
     "Cron": {
       "main": [
@@ -136,7 +136,7 @@
     {
       "parameters": {
         "requestMethod": "POST",
-        "url": "https://ga-medredtrmn-n8n-dev.cardinality.info/webhook-test/generatepdf",
+        "url": "https://ga-medredtrmn-n8n-dev.cardinality.info/webhook/generatepdf",
         "allowUnauthorizedCerts": true,
         "jsonParameters": true,
         "options": {},
@@ -280,5 +280,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-14T11:59:52.013Z"
+  "updatedAt": "2023-02-14T12:55:23.804Z"
 }
