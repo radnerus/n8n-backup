@@ -266,7 +266,7 @@
     },
     {
       "parameters": {
-        "functionCode": "var data =[];\n\nitems.map(item=>{\n  item.json.filename = item.json.case_id+'_'+item.json.member_name+'_'+(new Date()).getTime()+\".pdf\";\n  item.json.status = $node[\"File Download\"].json.path.split('_').shift();\n  item.json.input_location= \"/dropzone/processed/\"+$node[\"File Download\"].json.path;\n  item.json.file_name = $node[\"File Download\"].json.path;\n})\nreturn items"
+        "functionCode": "var data =[];\n\nitems.map(item=>{\n  item.json.filename = item.json.Street+'_'+item.json.City+'_'+(new Date()).getTime()+\".pdf\";\n  item.json.status = $node[\"File Download\"].json.path.split('_').shift();\n  item.json.input_location= \"/dropzone/processed/\"+$node[\"File Download\"].json.path;\n  item.json.file_name = $node[\"File Download\"].json.path;\n})\nreturn items"
       },
       "name": "Write File Name & Event Name",
       "type": "n8n-nodes-base.function",
@@ -280,5 +280,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-15T05:48:00.765Z"
+  "updatedAt": "2023-02-15T07:22:15.396Z"
 }
