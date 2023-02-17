@@ -5,7 +5,7 @@
       "main": [
         [
           {
-            "node": "HTTP Request",
+            "node": "Fetch Auth Token",
             "type": "main",
             "index": 0
           }
@@ -100,7 +100,18 @@
         ]
       ]
     },
-    "HTTP Request": {
+    "Fetch Auth Token": {
+      "main": [
+        [
+          {
+            "node": "Get Notification eventpath",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Notification eventpath": {
       "main": [
         [
           {
@@ -157,7 +168,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        20,
+        240,
         0
       ]
     },
@@ -169,7 +180,7 @@
       "type": "n8n-nodes-base.spreadsheetFile",
       "typeVersion": 1,
       "position": [
-        -480,
+        -260,
         0
       ]
     },
@@ -182,7 +193,7 @@
       "type": "n8n-nodes-base.ftp",
       "typeVersion": 1,
       "position": [
-        -260,
+        -40,
         -220
       ],
       "credentials": {
@@ -200,7 +211,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        0,
+        220,
         -220
       ]
     },
@@ -212,7 +223,7 @@
       "type": "n8n-nodes-base.ftp",
       "typeVersion": 1,
       "position": [
-        480,
+        700,
         -220
       ],
       "credentials": {
@@ -239,7 +250,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        240,
+        460,
         -220
       ]
     },
@@ -251,7 +262,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        320,
+        540,
         0
       ]
     },
@@ -265,7 +276,7 @@
       "type": "n8n-nodes-base.ftp",
       "typeVersion": 1,
       "position": [
-        560,
+        780,
         0
       ],
       "credentials": {
@@ -283,22 +294,38 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        -240,
+        -20,
         0
       ]
     },
     {
       "parameters": {
-        "authentication": "headerAuth",
-        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/notificationcases/notificationrenewalnotice",
+        "requestMethod": "POST",
+        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/org/auth/login",
         "jsonParameters": true,
-        "options": {}
+        "options": {},
+        "bodyParametersJson": "={\"email\":\"vimalathithan@cardinality.ai\",\"password\":\"Password@123\",\"secret\":\"\"}"
       },
-      "name": "HTTP Request",
+      "name": "Fetch Auth Token",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         -480,
+        -220
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/notification/eventpath?eventname=RENEWAL",
+        "jsonParameters": true,
+        "options": {}
+      },
+      "name": "Get Notification eventpath",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -260,
         -220
       ],
       "credentials": {
@@ -312,5 +339,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-17T09:08:24.047Z"
+  "updatedAt": "2023-02-17T13:35:22.228Z"
 }
