@@ -176,7 +176,7 @@
     {
       "parameters": {
         "operation": "list",
-        "path": "/dropzone/"
+        "path": "={{$json[\"data\"][0][\"path\"]}}"
       },
       "name": "Get List of Files",
       "type": "n8n-nodes-base.ftp",
@@ -312,5 +312,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-16T18:59:58.063Z"
+  "updatedAt": "2023-02-17T05:55:02.174Z"
 }
