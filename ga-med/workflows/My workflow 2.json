@@ -1,0 +1,320 @@
+{
+  "active": false,
+  "connections": {
+    "Trigger Scheduler": {
+      "main": [
+        [
+          {
+            "node": "Process Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Request": {
+      "main": [
+        [
+          {
+            "node": "All Referrals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if Active": {
+      "main": [
+        [
+          {
+            "node": "Active Medicaid Only",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Former Medicaid Only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "All Referrals": {
+      "main": [
+        [
+          {
+            "node": "Check if Active",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Active Medicaid Only": {
+      "main": [
+        [
+          {
+            "node": "Assign Case Woker 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Former Medicaid Only": {
+      "main": [
+        [
+          {
+            "node": "Assign Case Woker 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assign Case Woker 1": {
+      "main": [
+        [
+          {
+            "node": "Send Email To Case Worker 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assign Case Woker 2": {
+      "main": [
+        [
+          {
+            "node": "Send Email To Case Worker 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "createdAt": "2023-03-01T09:27:24.195Z",
+  "id": "10",
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -940,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        }
+      },
+      "name": "Trigger Scheduler",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        -720,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api-pics-qa.cardinalityai.xyz/api/org/auth/login",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "{\"email\":\"jonesarnold@cardinality.ai\",\"password\":\"Password@123456789\",\"secret\":\"\"}"
+      },
+      "name": "Process Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -500,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [],
+          "string": [
+            {
+              "value1": "={{$json[\"status\"]}}",
+              "value2": "A"
+            }
+          ]
+        }
+      },
+      "name": "Check if Active",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "update or_case.intake\nset type = 'Referral', category = 'Former Medicaid Only'\nwhere id  = 1;\nselect * from or_case.intake;",
+        "additionalFields": {}
+      },
+      "name": "Former Medicaid Only",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        100,
+        480
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "5",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "update or_case.intake\nset type = 'Referral', category = 'Active Medicaid Only'\nwhere id  = 1;\nselect * from or_case.intake;",
+        "additionalFields": {}
+      },
+      "name": "Active Medicaid Only",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        100,
+        260
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "5",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select * from \"or_case\".intake",
+        "additionalFields": {}
+      },
+      "name": "All Referrals",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        380
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "5",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "update or_case.intake\nset assigned_worker = 'Case Worker 1'\nwhere id  = 1;\nselect * from or_case.intake;",
+        "additionalFields": {}
+      },
+      "name": "Assign Case Woker 1",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        320,
+        260
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "5",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "info@cardinality.ai",
+        "toEmail": "info@cardinality.ai",
+        "text": "Assigned",
+        "options": {}
+      },
+      "name": "Send Email To Case Worker 1",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        540,
+        260
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "1",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "info@cardinality.ai",
+        "toEmail": "info@cardinality.ai",
+        "text": "Assigned",
+        "options": {}
+      },
+      "name": "Send Email To Case Worker 2",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        540,
+        480
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "1",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "update or_case.intake\nset assigned_worker = 'Case Worker 2'\nwhere id  = 1;\nselect * from or_case.intake;",
+        "additionalFields": {}
+      },
+      "name": "Assign Case Woker 2",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        320,
+        480
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "5",
+          "name": "Postgres account"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-03-01T09:27:24.195Z"
+}
