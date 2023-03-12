@@ -1,0 +1,208 @@
+{
+  "active": false,
+  "connections": {
+    "Assign to Case Worker": {
+      "main": [
+        [
+          {
+            "node": "Send Email to Case Worker",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Form Data Web Hook": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Create Locate Request to Agency 1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Locate Request to Agency 2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Locate Request to Agency 3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Assign to Case Worker",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "ESTABLISH SUPPORT ORDER",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-03-01T11:15:54.169Z",
+  "id": "16",
+  "name": "Custodial_Parent_Form_Flow",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -1480,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/org/auth/login",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "{\"email\":\"vimalathithan@cardinality.ai\",\"password\":\"Password@123\",\"secret\":\"\"}"
+      },
+      "name": "Create Locate Request to Agency 1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -520,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/org/auth/login",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "{\"email\":\"vimalathithan@cardinality.ai\",\"password\":\"Password@123\",\"secret\":\"\"}"
+      },
+      "name": "Create Locate Request to Agency 2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/org/auth/login",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "{\"email\":\"vimalathithan@cardinality.ai\",\"password\":\"Password@123\",\"secret\":\"\"}"
+      },
+      "name": "Create Locate Request to Agency 3",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -280,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/org/auth/login",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "{\"email\":\"vimalathithan@cardinality.ai\",\"password\":\"Password@123\",\"secret\":\"\"}"
+      },
+      "name": "ESTABLISH SUPPORT ORDER",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -600,
+        760
+      ]
+    },
+    {
+      "parameters": {
+        "form": 74,
+        "roles": [
+          43
+        ]
+      },
+      "name": "Assign to Case Worker",
+      "type": "n8n-nodes-base.cardinalityAssignUser",
+      "typeVersion": 1,
+      "position": [
+        -600,
+        960
+      ]
+    },
+    {
+      "parameters": {
+        "emailtemplate": 13,
+        "packet": 8
+      },
+      "name": "Send Email to Case Worker",
+      "type": "n8n-nodes-base.cardinalitySendEmail",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        960
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "console.log('test...');\nconsole.log(items);\n\nitems.map(item => {\n   const payload = item.json.payload;\n   payload.formid = payload.responseid;\n   payload.customformid = payload.responseid;\n   item.json.payload = payload;\n   \n   const users = item.json.users;\n   users.map(user => {\n     const name = user.name.split(',');\n     if (name.length) {\n       user.firstname = name[0];\n       user.lastname = name[1];\n     }\n     return user;\n   });\n   item.json.users = users;\n   return item;\n});\n\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -360,
+        1160
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "getdata",
+        "options": {}
+      },
+      "name": "Form Data Web Hook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -1300,
+        600
+      ],
+      "webhookId": "6c858d87-adb3-402a-b68e-64fd0124e7ef"
+    },
+    {
+      "parameters": {},
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -1100,
+        600
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-03-03T11:43:07.585Z"
+}
