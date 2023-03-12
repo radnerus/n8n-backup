@@ -238,6 +238,11 @@
             "node": "Write File Name & Event Name",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Update Event Process",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -339,7 +344,7 @@
     {
       "parameters": {
         "requestMethod": "POST",
-        "url": "https://ga-medredtrmn-n8n-dev.cardinality.info/webhook/trigger/compresspdf",
+        "url": "https://ga-medredtrmn-n8n-dev.cardinality.info/webhook-test/trigger/compresspdf",
         "allowUnauthorizedCerts": true,
         "jsonParameters": true,
         "options": {},
@@ -576,7 +581,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        -600,
+        -640,
         -260
       ]
     },
@@ -742,5 +747,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-12T17:55:05.734Z"
+  "updatedAt": "2023-03-12T18:57:08.527Z"
 }
