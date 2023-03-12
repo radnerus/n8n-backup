@@ -321,7 +321,6 @@
     },
     {
       "parameters": {
-        "amount": 5,
         "unit": "minutes"
       },
       "name": "Wait",
@@ -444,5 +443,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-09T16:12:22.175Z"
+  "updatedAt": "2023-03-12T18:58:05.275Z"
 }
