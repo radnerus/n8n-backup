@@ -1,0 +1,199 @@
+{
+  "active": true,
+  "connections": {
+    "Submit Appeal Form ": {
+      "main": [
+        [
+          {
+            "node": "Check Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Status": {
+      "main": [
+        [
+          {
+            "node": "Assign Caseworker",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assign Caseworker": {
+      "main": [
+        [
+          {
+            "node": "Assign Supervisor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assign Supervisor": {
+      "main": [
+        [
+          {
+            "node": "Disposition",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Disposition": {
+      "main": [
+        [
+          {
+            "node": "Approval Mail",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Rejection Mail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-03-06T05:40:45.640Z",
+  "id": "21",
+  "name": "Appeal Approval",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": []
+        }
+      },
+      "name": "Check Status",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        400,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "appeal-data",
+        "options": {}
+      },
+      "name": "Submit Appeal Form ",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        200,
+        220
+      ],
+      "webhookId": "93ef436a-077f-41a9-94c9-2d3405b2dc78"
+    },
+    {
+      "parameters": {},
+      "name": "Disposition",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1140,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/org/auth/login",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "{\"email\":\"vimalathithan@cardinality.ai\",\"password\":\"Password@123\",\"secret\":\"\"}"
+      },
+      "name": "Assign Supervisor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        900,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/org/auth/login",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "{\"email\":\"vimalathithan@cardinality.ai\",\"password\":\"Password@123\",\"secret\":\"\"}"
+      },
+      "name": "Assign Caseworker",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        660,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "vimalesh.venkatesan@particleblack.com",
+        "toEmail": "mohan@cardinality.ai",
+        "text": "Approved",
+        "options": {}
+      },
+      "name": "Approval Mail",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        80
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "1",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "vimalesh.venkatesan@particleblack.com",
+        "toEmail": "mohan@cardinality.ai",
+        "text": "Rejected",
+        "options": {}
+      },
+      "name": "Rejection Mail",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        320
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "1",
+          "name": "SMTP account"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-03-06T10:39:13.201Z"
+}
