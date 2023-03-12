@@ -1,0 +1,516 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Fetch Auth Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AWS S3": {
+      "main": [
+        [
+          {
+            "node": "Status Update Based On Upload",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "AWS S31",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Function1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetchTemplate": {
+      "main": [
+        [
+          {
+            "node": "Generate Buffer Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AWS S31": {
+      "main": [
+        [
+          {
+            "node": "Write Binary File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Binary File": {
+      "main": [
+        [
+          {
+            "node": "Read Binary File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Audit Data": {
+      "main": [
+        [
+          {
+            "node": "fetchTemplate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Audit Data": {
+      "main": [
+        [
+          {
+            "node": "Save Audit Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Data to Process": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Buffer Data": {
+      "main": [
+        [
+          {
+            "node": "Data to Upload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data to Upload": {
+      "main": [
+        [
+          {
+            "node": "AWS S3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Status Update Based On Upload": {
+      "main": [
+        [
+          {
+            "node": "Update Audit Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Save Event Process Item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Event Process Item": {
+      "main": [
+        [
+          {
+            "node": "Audit Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Auth Token": {
+      "main": [
+        [
+          {
+            "node": "Get Data to Process",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Fetch Auth Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-03-06T09:39:36.263Z",
+  "id": "22",
+  "name": "testflowgeneratepdf",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        -220
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "bucketName": "ga-medredtrmn-dev",
+        "fileName": "={{$node[\"Webhook\"].json[\"body\"][\"filename\"]}}",
+        "binaryPropertyName": "bin",
+        "additionalFields": {}
+      },
+      "name": "AWS S3",
+      "type": "n8n-nodes-base.awsS3",
+      "typeVersion": 1,
+      "position": [
+        340,
+        180
+      ],
+      "alwaysOutputData": false,
+      "credentials": {
+        "aws": {
+          "id": "4",
+          "name": "AWS account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/notificationcases/emailtemplate",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{JSON.stringify({data:[$node[\"Get Data to Process\"].json[\"data\"]]})}}"
+      },
+      "name": "fetchTemplate",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -340,
+        180
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "bucketName": "ga-medredtrmn-dev",
+        "fileKey": "={{$node[\"Webhook\"].json[\"body\"][\"filename\"]}}"
+      },
+      "name": "AWS S31",
+      "type": "n8n-nodes-base.awsS3",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        420
+      ],
+      "credentials": {
+        "aws": {
+          "id": "4",
+          "name": "AWS account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "filePath": "={{$node[\"Webhook\"].json[\"body\"][\"filename\"]}}"
+      },
+      "name": "Read Binary File",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        340,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "fileName": "={{$node[\"Webhook\"].json[\"body\"][\"filename\"]}}"
+      },
+      "name": "Write Binary File",
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        100,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/notificationcases/saveaudit",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{JSON.stringify($json)}}"
+      },
+      "name": "Save Audit Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        660,
+        -20
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "items[0].json.status=\"IN PROGRESS\";\nitems[0].json.event_id=\"1\";\nitems[0].json.external_id= items[0].json.data.Case_id;\nitems[0].json.execution_id=$executionId;\nitems[0].json.channel= \"PRINT\";\nitems[0].json.event_process_id= items[0].json.data.event_process_id;\nconsole.log(\"execution_id \",$executionId);\nreturn items"
+      },
+      "name": "Audit Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        500,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/notificationcases/saveaudit",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{JSON.stringify($json)}}"
+      },
+      "name": "Update Audit Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        880,
+        180
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "return items"
+      },
+      "name": "Get Data to Process",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        220,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/pdf/generate",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{JSON.stringify($node[\"fetchTemplate\"].json[\"data\"][0])}}"
+      },
+      "name": "Generate Buffer Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "return [{json: {}, binary: {bin: {data: items[0].json.data}}}];"
+      },
+      "name": "Data to Upload",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        120,
+        180
+      ],
+      "retryOnFail": false,
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "functionCode": "var id= $node[\"Save Audit Data\"].json.data[0].id\nconsole.log(\"id \",id);\nvar status;\nif($node[\"AWS S3\"].json[\"success\"] == true){\nstatus=\"SUCCESS\";\n}else{\nstatus=\"IN PROGRESS\";\n}\nconst content = {\n  output_url:\"https://s3.us-east-1.amazonaws.com\"+\"/ga-medredtrmn-dev/\"+$node[\"Webhook\"].json[\"body\"][\"filename\"],\n  input_location:$node[\"Webhook\"].json.body.input_location\n}\nreturn[{\njson:{\n\"id\":id,\n\"status\":status,\n\"content\":JSON.stringify(content)\n}\n}]"
+      },
+      "name": "Status Update Based On Upload",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        600,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "items[0].json.status=\"IN PROGRESS\";\nitems[0].json.eventid=\"1\";\nitems[0].json.externalid= items[0].json.data.Case_id;\nitems[0].json.executionid=$executionId;\nitems[0].json.channel= \"PRINT\";\nitems[0].json.payload= items[0].json.data;\nitems[0].json.eventprocessid= items[0].json.data.event_process_id;\nconsole.log(\"execution_id \",$executionId);\nreturn items\n"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        460,
+        -260
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/emailtemplate/event-process/item",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{JSON.stringify($json)}}"
+      },
+      "name": "Save Event Process Item",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        660,
+        -260
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "//var id= $node[\"Save Audit Data\"].json.data[0].id\n//console.log(\"id \",id);\nvar status;\nif($node[\"AWS S3\"].json[\"success\"] == true){\nstatus=\"SUCCESS\";\n}else{\nstatus=\"IN PROGRESS\";\n}\nconst content = {\n  output_url:\"https://s3.us-east-1.amazonaws.com\"+\"/ga-medredtrmn-dev/\"+$node[\"Webhook\"].json[\"body\"][\"filename\"],\n  input_location:$node[\"Webhook\"].json.body.input_location\n}\nconsole.log('items', $node[\"Save Event Process Item\"].json)\nvar processItem = $node[\"Save Event Process Item\"].json.data;\nprocessItem.status = 'SUCCESS';\nprocessItem.content= JSON.stringify(content);\nprocessItem.insertedBy = new Date();\nprocessItem.updatedBy= new Date();\nreturn [{json:processItem}]\n\n"
+      },
+      "name": "Function1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        640,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/org/auth/login",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "{\"email\":\"vimalathithan@cardinality.ai\",\"password\":\"Password@123\",\"secret\":\"\"}"
+      },
+      "name": "Fetch Auth Token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://api-ga-medredtrmn-dev.cardinality.info/api/emailtemplate/event-process/item/{{$json[\"id\"]}}",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{JSON.stringify($json)}}"
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        860,
+        380
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "testgenerate",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -340,
+        -20
+      ],
+      "webhookId": "9f84e02d-29c8-4515-9a3b-3bf03af4d716"
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-03-09T12:50:16.334Z"
+}
