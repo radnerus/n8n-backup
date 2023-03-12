@@ -1,0 +1,448 @@
+{
+  "active": true,
+  "connections": {
+    "Fetch Auth Token": {
+      "main": [
+        [
+          {
+            "node": "Check Process Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Files From S3": {
+      "main": [
+        [
+          {
+            "node": "Merge PDF & Meta Files",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Convert as Array Binary": {
+      "main": [
+        [
+          {
+            "node": "Compress as Zip File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compress as Zip File": {
+      "main": [
+        [
+          {
+            "node": "Upload Zip to Outbound",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move Binary Data": {
+      "main": [
+        [
+          {
+            "node": "Merge PDF & Meta Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge PDF & Meta Files": {
+      "main": [
+        [
+          {
+            "node": "Convert as Array Binary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Zip to Outbound": {
+      "main": [
+        [
+          {
+            "node": "Get Meta & S3 Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Fetch Auth Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Get Meta & S3 Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Process Status": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Meta & S3 Data": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Metadata": {
+      "main": [
+        [
+          {
+            "node": "Move Binary Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return S3 Data": {
+      "main": [
+        [
+          {
+            "node": "Download Files From S3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "Return Metadata",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Return S3 Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-03-07T11:14:48.644Z",
+  "id": "25",
+  "name": "Compress As Tar FIle",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        -60
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/org/auth/login",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={\"email\":\"vimalathithan@cardinality.ai\",\"password\":\"Password@123\",\"secret\":\"\"}"
+      },
+      "name": "Fetch Auth Token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        320,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "bucketName": "ga-medredtrmn-dev",
+        "fileKey": "={{$node[\"Return S3 Data\"].json[\"filename\"]}}"
+      },
+      "name": "Download Files From S3",
+      "type": "n8n-nodes-base.awsS3",
+      "typeVersion": 1,
+      "position": [
+        600,
+        420
+      ],
+      "credentials": {
+        "aws": {
+          "id": "4",
+          "name": "AWS account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "const binaryProperties = {};\nfor (let i=0;i<items.length;i++) {\n  let item = items[i];\n  binaryProperties[`data${i}`] = item.binary.data;\n}\n\nreturn [\n  {\n    json: {\n      binaryProperties: Object.keys(binaryProperties).join(','),\n    },\n    binary: binaryProperties,\n  }\n]\n"
+      },
+      "name": "Convert as Array Binary",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "compress",
+        "binaryPropertyName": "={{$json[\"binaryProperties\"]}}",
+        "outputFormat": "zip",
+        "fileName": "=test"
+      },
+      "name": "Compress as Zip File",
+      "type": "n8n-nodes-base.compression",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "protocol": "sftp",
+        "operation": "upload",
+        "path": "=/ga-sftp-test/test/outbound/IESUC_SupplimentalNotice_{{new Date().toISOString().slice(0, 10).split('-').reverse().join('')+'_'+(new Date()).getTime()}}.tar"
+      },
+      "name": "Upload Zip to Outbound",
+      "type": "n8n-nodes-base.ftp",
+      "typeVersion": 1,
+      "position": [
+        -220,
+        320
+      ],
+      "credentials": {
+        "sftp": {
+          "id": "9",
+          "name": "SFTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "jsonToBinary",
+        "convertAllData": false,
+        "sourceKey": "={{Object.keys($node[\"Return Metadata\"].json)[0]}}",
+        "options": {
+          "fileName": "=AdobeReadData_{{new Date().toISOString().slice(0, 10).split('-').reverse().join('')+'_'+(new Date()).getTime()}}",
+          "useRawData": true
+        }
+      },
+      "name": "Move Binary Data",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        600,
+        200
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "Merge PDF & Meta Files",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        860,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "trigger/compresspdf",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        100
+      ],
+      "webhookId": "a6679571-225e-4de1-99f4-be1161ce54e5"
+    },
+    {
+      "parameters": {
+        "amount": 5,
+        "unit": "minutes"
+      },
+      "name": "Wait",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        80,
+        -20
+      ],
+      "webhookId": "357e2f81-7ce4-4665-b078-f162b1f56d07"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{true}}",
+              "value2": "={{$node[\"Check Process Status\"].json}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        820,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/emailtemplate/event-process/processupdate",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={\n\"id\":{{$node[\"Webhook\"].json[\"body\"][\"id\"]}},\n\"status\":\"\"\n}"
+      },
+      "name": "Check Process Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        580,
+        -20
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://api-ga-medredtrmn-dev.cardinality.info/api/emailtemplate/event-process/getMetaData/{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}",
+        "options": {}
+      },
+      "name": "Get Meta & S3 Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "\nreturn [{json:\n{metadata:items[0].json.data[0].metadata}}];"
+      },
+      "name": "Return Metadata",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        360,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "console.log(' testr ',items[0].json.data[0].filedata);\n\nreturn items[0].json.data[0].filedata.map(item => {\n  return {\n    json: item\n  }\n});\n"
+      },
+      "name": "Return S3 Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        360,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{JSON.stringify($node[\"Get Meta & S3 Data\"].json[\"data\"][0][\"filedata\"])}}",
+              "operation": "notContains",
+              "value2": "null"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        140,
+        200
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-03-09T16:12:22.175Z"
+}
