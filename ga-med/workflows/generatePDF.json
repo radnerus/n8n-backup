@@ -139,13 +139,13 @@
             "node": "Get Data to Process",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Function11",
+            "type": "main",
+            "index": 0
           }
         ]
-      ]
-    },
-    "Save Event Process Item": {
-      "main": [
-        []
       ]
     },
     "Function1": {
@@ -164,6 +164,17 @@
         [
           {
             "node": "Fetch Auth Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function11": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
             "type": "main",
             "index": 0
           }
@@ -490,6 +501,41 @@
           "name": "Header Auth account"
         }
       }
+    },
+    {
+      "parameters": {
+        "functionCode": "//var id= $node[\"Save Audit Data\"].json.data[0].id\n//console.log(\"id \",id);\nvar status;\n\nstatus=\"IN PROGRESS\";\nvar processItem = $node[\"Webhook\"].json.body;\nprocessItem.status = 'SUCCESS';\nprocessItem.content= '';\nprocessItem.insertedBy = new Date();\nprocessItem.updatedBy= new Date();\nprocessItem.execution_id = $executionId;\nreturn [{json:processItem}]\n\n"
+      },
+      "name": "Function11",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -780,
+        -300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://api-ga-medredtrmn-dev.cardinality.info/api/address/member-match/{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{JSON.stringify($json)}}"
+      },
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -540,
+        -300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3",
+          "name": "Header Auth account"
+        }
+      }
     }
   ],
   "settings": {
@@ -499,5 +545,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-12T17:55:01.540Z"
+  "updatedAt": "2023-03-12T18:56:00.367Z"
 }
