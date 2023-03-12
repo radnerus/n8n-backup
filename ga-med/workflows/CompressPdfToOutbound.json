@@ -1,0 +1,525 @@
+{
+  "active": false,
+  "connections": {
+    "Move Binary Data": {
+      "main": [
+        [
+          {
+            "node": "Merge PDF & Meta Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ConfigureRequest": {
+      "main": [
+        [
+          {
+            "node": "Fetch Data Of Request",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Data Of Request": {
+      "main": [
+        [
+          {
+            "node": "Return Filename",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Filename": {
+      "main": [
+        [
+          {
+            "node": "Tar Filename",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Files From S3": {
+      "main": [
+        [
+          {
+            "node": "Merge PDF & Meta Files",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge PDF & Meta Files": {
+      "main": [
+        [
+          {
+            "node": "Convert as Array Binary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert as Array Binary": {
+      "main": [
+        [
+          {
+            "node": "Compress as Zip File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compress as Zip File": {
+      "main": [
+        [
+          {
+            "node": "Upload Zip to Outbound",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres": {
+      "main": [
+        [
+          {
+            "node": "Move Binary Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Zip to Outbound": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "ConfigureRequest",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch Auth Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tar Filename": {
+      "main": [
+        [
+          {
+            "node": "Download Files From S3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Auth Token": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Function1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-03-02T06:25:04.744Z",
+  "id": "19",
+  "name": "CompressPdfToOutbound",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -1380,
+        -480
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "Admin",
+        "toEmail": "={{$node[\"ConfigureRequest\"].json[\"toMailId\"]}}",
+        "subject": "Dashboard Updated",
+        "text": "Hi,\n\nThe input files are processed successfully. Please check the dashboard.\n\n\n\n\nThanks\nGA-Redetermination.",
+        "attachments": "=",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        100
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "1",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "jsonToBinary",
+        "convertAllData": false,
+        "sourceKey": "={{Object.keys($json)[0]}}",
+        "options": {
+          "fileName": "=MetaFile",
+          "useRawData": true
+        }
+      },
+      "name": "Move Binary Data",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        -680,
+        -140
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "fileName",
+              "value": "Test print2.xlsx"
+            },
+            {
+              "name": "toMailId",
+              "value": "saranya.pandidurai@particleblack.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "ConfigureRequest",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        -620,
+        -360
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=SELECT content FROM or_email_template.notification_audit na WHERE file_name = '{{$json[\"fileName\"]}}' AND  content is not null",
+        "additionalFields": {}
+      },
+      "name": "Fetch Data Of Request",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        -360,
+        -360
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "5",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "items.map(item=>{\n    item.json.content.filename=item.json.content.output_url.split('/ga-medredtrmn-dev/')[1];\n})\n\nreturn items;\n"
+      },
+      "name": "Return Filename",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        -360
+      ]
+    },
+    {
+      "parameters": {
+        "bucketName": "ga-medredtrmn-dev",
+        "fileKey": "={{$node[\"Return Filename\"].json[\"content\"][\"filename\"]}}"
+      },
+      "name": "Download Files From S3",
+      "type": "n8n-nodes-base.awsS3",
+      "typeVersion": 1,
+      "position": [
+        -920,
+        60
+      ],
+      "credentials": {
+        "aws": {
+          "id": "4",
+          "name": "AWS account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "Merge PDF & Meta Files",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        -680,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const binaryProperties = {};\nfor (let i=0;i<items.length;i++) {\n  let item = items[i];\n  binaryProperties[`data${i}`] = item.binary.data;\n}\n\nreturn [\n  {\n    json: {\n      binaryProperties: Object.keys(binaryProperties).join(','),\n    },\n    binary: binaryProperties,\n  }\n]\n"
+      },
+      "name": "Convert as Array Binary",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -440,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "compress",
+        "binaryPropertyName": "={{$json[\"binaryProperties\"]}}",
+        "outputFormat": "zip",
+        "fileName": "=test"
+      },
+      "name": "Compress as Zip File",
+      "type": "n8n-nodes-base.compression",
+      "typeVersion": 1,
+      "position": [
+        -220,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "protocol": "sftp",
+        "operation": "upload",
+        "path": "=/ga-sftp-test/test/outbound/{{$node[\"Tar Filename\"].json[\"filename\"]}}"
+      },
+      "name": "Upload Zip to Outbound",
+      "type": "n8n-nodes-base.ftp",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        100
+      ],
+      "credentials": {
+        "sftp": {
+          "id": "9",
+          "name": "SFTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=SELECT * FROM or_email_template.getmetadata('{{$json[\"fileName\"]}}')",
+        "additionalFields": {}
+      },
+      "name": "Postgres",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        -900,
+        -140
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "5",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "trigger/compresspdf",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -1160,
+        -480
+      ],
+      "webhookId": "a6679571-225e-4de1-99f4-be1161ce54e5"
+    },
+    {
+      "parameters": {
+        "amount": 10,
+        "unit": "seconds"
+      },
+      "name": "Wait",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        -940,
+        -480
+      ],
+      "webhookId": "357e2f81-7ce4-4665-b078-f162b1f56d07"
+    },
+    {
+      "parameters": {
+        "functionCode": "let filename = \"IESUC_SupplimentalNotice\"+'_'+new Date().toISOString().slice(0, 10).split('-').reverse().join('')+'_'+(new Date()).getTime()+'.tar';\n\nreturn [{\njson: {filename}\n}]"
+      },
+      "name": "Tar Filename",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        120,
+        -360
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://api-ga-medredtrmn-dev.cardinality.info/api/emailtemplate/event-process/getMetaData/{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}",
+        "options": {}
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -460,
+        -540
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/emailtemplate/event-process/processupdate",
+        "options": {}
+      },
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -1360,
+        -220
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/org/auth/login",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "{\"email\":\"vimalathithan@cardinality.ai\",\"password\":\"Password@123\",\"secret\":\"\"}"
+      },
+      "name": "Fetch Auth Token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -700,
+        -540
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "return items[0].json.data.map(item => {\n  return {\n    json: item\n  }\n});"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -280,
+        -600
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "return items[0].json.files.map(item => {\n  return {\n    json: item\n  }\n});\n"
+      },
+      "name": "Function1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        -600
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-03-08T09:14:15.763Z"
+}
