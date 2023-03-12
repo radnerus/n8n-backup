@@ -536,7 +536,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        -320,
+        -300,
         460
       ]
     },
@@ -657,7 +657,7 @@
     },
     {
       "parameters": {
-        "functionCode": "var data =[];\nconsole.log(\"item id\",+$node[\"Save Event Process Item\"]);\nconst record_count = items.length;\nitems.map(item=>{\n console.log('item33', item.json)\n  var eachdata = {\n  \"member_id\": item.json.data.externalid,\n  \"zip\": item.json.data.payload.Zip,\n  \"zip_ext\": item.json.data.payload.Zip,\n  \"address_1\": item.json.data.payload.Client_Address_1,\n  \"address_2\": item.json.data.payload.Client_Address_2,\n  \"event_process_item_id\":item.json.data.id,\n  \"payload\" : item.json.data.payload\n  }\n  data.push(eachdata );\n})\nreturn data.map(item=>{\nreturn {\"json\": item};\n})\n"
+        "functionCode": "var data =[];\nconsole.log(\"item id\",+$node[\"Save Event Process Item\"]);\nconst record_count = items.length;\nitems.map(item=>{\n console.log('item33', item.json)\n  var eachdata = {\n  \"member_id\": item.json.data.externalid,\n  \"zip\": item.json.data.payload.Zip,\n  \"zip_ext\": item.json.data.payload.Zip,\n  \"address_1\": item.json.data.payload.Client_Address_1,\n  \"address_2\": item.json.data.payload.Client_Address_2,\n  \"event_process_item_id\":item.json.data.id,\n  \"event_process_id\": $node[\"Save Event Process\"].json.data.id,\n  \"payload\" : item.json.data.payload\n  }\n  data.push(eachdata );\n})\nreturn data.map(item=>{\nreturn {\"json\": item};\n})\n"
       },
       "name": "Address Matching Request",
       "type": "n8n-nodes-base.function",
@@ -707,5 +707,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-12T08:34:23.112Z"
+  "updatedAt": "2023-03-12T10:55:52.463Z"
 }
