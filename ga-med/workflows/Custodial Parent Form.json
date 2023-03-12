@@ -1,0 +1,216 @@
+{
+  "active": false,
+  "connections": {
+    "Forms Trigger": {
+      "main": [
+        [
+          {
+            "node": "Service Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assign to Case Worker": {
+      "main": [
+        [
+          {
+            "node": "Send Email to Case Worker",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Service Check": {
+      "main": [
+        [
+          {
+            "node": "Create Locate Request to Agency 1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Locate Request to Agency 2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Locate Request to Agency 3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ESTABLISH SUPPORT ORDER",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Assign to Case Worker",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-03-01T11:15:54.169Z",
+  "id": "17",
+  "name": "Custodial Parent Form",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -1500,
+        940
+      ]
+    },
+    {
+      "parameters": {
+        "form": 74
+      },
+      "name": "Forms Trigger",
+      "type": "n8n-nodes-base.cardinalityCustomFormsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1240,
+        600
+      ],
+      "webhookId": "26c08b56-4789-43d0-8692-7c8efc4d6ee9"
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api-pics-qa.cardinalityai.xyz/api/org/auth/login",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "{\"email\":\"jonesarnold@cardinality.ai\",\"password\":\"Password@123\"}"
+      },
+      "name": "Create Locate Request to Agency 1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -520,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api-pics-qa.cardinalityai.xyz/api/org/auth/login",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "{\"email\":\"jonesarnold@cardinality.ai\",\"password\":\"Password@123\"}"
+      },
+      "name": "Create Locate Request to Agency 2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api-pics-qa.cardinalityai.xyz/api/org/auth/login",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "{\"email\":\"jonesarnold@cardinality.ai\",\"password\":\"Password@123\"}"
+      },
+      "name": "Create Locate Request to Agency 3",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -280,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api-pics-qa.cardinalityai.xyz/api/org/auth/login",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "{\"email\":\"jonesarnold@cardinality.ai\",\"password\":\"Password@123456789\"}"
+      },
+      "name": "ESTABLISH SUPPORT ORDER",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -600,
+        760
+      ]
+    },
+    {
+      "parameters": {
+        "form": 74,
+        "roles": [
+          43
+        ]
+      },
+      "name": "Assign to Case Worker",
+      "type": "n8n-nodes-base.cardinalityAssignUser",
+      "typeVersion": 1,
+      "position": [
+        -600,
+        960
+      ]
+    },
+    {
+      "parameters": {
+        "emailtemplate": 13,
+        "packet": 8
+      },
+      "name": "Send Email to Case Worker",
+      "type": "n8n-nodes-base.cardinalitySendEmail",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        960
+      ]
+    },
+    {
+      "parameters": {
+        "form": 74,
+        "conditions": {
+          "string": [
+            {
+              "value1": "service_looking_for",
+              "value2": "LocateFather"
+            }
+          ]
+        }
+      },
+      "name": "Service Check",
+      "type": "n8n-nodes-base.cardinalityFormRule",
+      "typeVersion": 1,
+      "position": [
+        -1020,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "console.log('test...');\nconsole.log(items);\n\nitems.map(item => {\n   const payload = item.json.payload;\n   payload.formid = payload.responseid;\n   payload.customformid = payload.responseid;\n   item.json.payload = payload;\n   \n   const users = item.json.users;\n   users.map(user => {\n     const name = user.name.split(',');\n     if (name.length) {\n       user.firstname = name[0];\n       user.lastname = name[1];\n     }\n     return user;\n   });\n   item.json.users = users;\n   return item;\n});\n\nreturn items;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -360,
+        1160
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-03-01T11:15:54.169Z"
+}
