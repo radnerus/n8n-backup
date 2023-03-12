@@ -1,0 +1,563 @@
+{
+  "active": false,
+  "connections": {
+    "Fetch Notification Data": {
+      "main": [
+        [
+          {
+            "node": "Write File Name & Event Name",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update Event Process",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get List of Files": {
+      "main": [
+        [
+          {
+            "node": "Get File Path",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get File Path": {
+      "main": [
+        [
+          {
+            "node": "Get Event Process Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "File Download": {
+      "main": [
+        [
+          {
+            "node": "Fetch Notification Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write File Name & Event Name": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Auth Token": {
+      "main": [
+        [
+          {
+            "node": "Get Notification eventpath",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Notification eventpath": {
+      "main": [
+        [
+          {
+            "node": "Resource Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resource Config": {
+      "main": [
+        [
+          {
+            "node": "Get List of Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger Generate PDF": {
+      "main": [
+        [
+          {
+            "node": "Get File Path To Move",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scheduler": {
+      "main": [
+        [
+          {
+            "node": "Configure Event Name",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Configure Event Name": {
+      "main": [
+        [
+          {
+            "node": "Fetch Auth Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Event Process": {
+      "main": [
+        [
+          {
+            "node": "File Download",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Event Process Data": {
+      "main": [
+        [
+          {
+            "node": "Save Event Process",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Event Process": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-03-06T09:42:15.814Z",
+  "id": "23",
+  "name": "testnotificationtrigger",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -500,
+        -220
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "name": "Fetch Notification Data",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        700,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "protocol": "sftp",
+        "operation": "list",
+        "path": "={{$node[\"Get Notification eventpath\"].json[\"data\"][0][\"path\"]}}"
+      },
+      "name": "Get List of Files",
+      "type": "n8n-nodes-base.ftp",
+      "typeVersion": 1,
+      "position": [
+        900,
+        -200
+      ],
+      "credentials": {
+        "sftp": {
+          "id": "9",
+          "name": "SFTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "items = items.filter(item => item.json.type !== \"d\");\nreturn items;"
+      },
+      "name": "Get File Path",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -280,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "protocol": "sftp",
+        "path": "={{$node[\"Get File Path\"].json[\"path\"]}}"
+      },
+      "name": "File Download",
+      "type": "n8n-nodes-base.ftp",
+      "typeVersion": 1,
+      "position": [
+        440,
+        40
+      ],
+      "credentials": {
+        "sftp": {
+          "id": "9",
+          "name": "SFTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "var processedFileName=$node[\"Get File Path\"];\nconsole.log('path ',($items(\"Get File Path\")));\nreturn $items(\"Get File Path\");"
+      },
+      "name": "Get File Path To Move",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        300,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "protocol": "sftp",
+        "operation": "rename",
+        "oldPath": "={{$node[\"Get Notification eventpath\"].json[\"data\"][0][\"path\"]}}{{$json[\"name\"]}}",
+        "newPath": "={{$node[\"Get Notification eventpath\"].json[\"data\"][0][\"path\"]}}processed/{{$json[\"name\"]}}"
+      },
+      "name": "Move Processed File",
+      "type": "n8n-nodes-base.ftp",
+      "typeVersion": 1,
+      "position": [
+        840,
+        240
+      ],
+      "credentials": {
+        "sftp": {
+          "id": "9",
+          "name": "SFTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "var data =[];\n\nconsole.log(\"itemsssss \",$node[\"Fetch Notification Data\"].json);\nconst record_count = items.length;\nitems.map(item=>{\nconsole.log('KEYS',item.json[Object.keys(item.json)[1]]);\n  item.json.filename = item.json[Object.keys(item.json)[0]]+'_'+item.json[Object.keys(item.json)[1]]+'_'+(new Date()).getTime()+\".pdf\";\n  item.json.status = $node[\"Configure Event Name\"].json[\"eventname\"];\n  item.json.input_location= $node[\"Get Notification eventpath\"].json[\"data\"][0][\"path\"]+\"processed/\"+$node[\"Get File Path\"].json.name;\n  item.json.file_name = $node[\"Get File Path\"].json.name; //$node[\"File Download\"].json.path;\n  item.json.event_process_id =  $node[\"Save Event Process\"].json?.data?.id;\n  item.json.record_count = record_count;\n})\nreturn items\n"
+      },
+      "name": "Write File Name & Event Name",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -280,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/org/auth/login",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={\"email\":\"vimalathithan@cardinality.ai\",\"password\":\"Password@123\",\"secret\":\"\"}"
+      },
+      "name": "Fetch Auth Token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        180,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://api-ga-medredtrmn-dev.cardinality.info/api/notification/eventpath?eventname={{$node[\"Configure Event Name\"].json[\"eventname\"]}}",
+        "jsonParameters": true,
+        "options": {}
+      },
+      "name": "Get Notification eventpath",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        420,
+        -200
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/emailtemplate/resources/getCredentialsByName/FTP SERVER",
+        "options": {}
+      },
+      "name": "Resource Config",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        660,
+        -200
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://ga-medredtrmn-n8n-dev.cardinality.info/webhook/generatepdf",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{JSON.stringify($json)}}"
+      },
+      "name": "Trigger Generate PDF",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        0,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        }
+      },
+      "name": "Scheduler",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "eventname",
+              "value": "Renewal Template New"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Configure Event Name",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/emailtemplate/event-process",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{JSON.stringify($json)}}"
+      },
+      "name": "Save Event Process",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        180,
+        40
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "var data={};\nconst currentDate = new Date();\nitems.map(item=>{\nconsole.log(item.json);\n  data = {\n  filename : $node[\"Get File Path\"].json.name,\n  process_begin : currentDate ,\n  process_end : null,\n  event_id : 1,\n  status: \"IN PROGRESS\"\n  }\n  \n})\nreturn [{\"json\": data}]\n"
+      },
+      "name": "Get Event Process Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://api-ga-medredtrmn-dev.cardinality.info/api/emailtemplate/event-process/{{$node[\"Update Event Process\"].json[\"id\"]}}",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{JSON.stringify($node[\"Update Event Process\"].json)}}"
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        100
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "var data={};\nconst currentDate = new Date();\nconst totalRecordsCount = items.length;\nitems.map(item=>{\nconsole.log(item.json);\n  data = {\n  filename : $node[\"Get File Path\"].json.name,\n  process_begin : currentDate ,\n  process_end : null,\n  event_id : 1,\n  status: \"IN PROGRESS\",\n  record_count:totalRecordsCount,\n  id:$node[\"Save Event Process\"].json?.data?.id\n  }\n  \n})\nreturn [{\"json\": data}]\n"
+      },
+      "name": "Update Event Process",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        920,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://ga-medredtrmn-n8n-dev.cardinality.info/webhook/trigger/compresspdf",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={\n\"event_name\": \"{{$node[\"Configure Event Name\"].json[\"eventname\"]}}\",\n\"id\":\"{{$node[\"Save Event Process\"].json[\"data\"][\"id\"]}}\"\n}"
+      },
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        920,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "if (Object.keys(items[0].json).length === 0) {\n  return [\n     {\n       json: {\n         results: 0,\n       }\n      }\n  ]\n}\nreturn [\n  {\n    json: {\n      results: items.length,\n    }\n  }\n];\n"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        320,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Write File Name & Event Name\"].json[\"record_count\"]}}",
+              "operation": "equal",
+              "value2": "={{$node[\"Function\"].json[\"results\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        540,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "22"
+      },
+      "name": "Execute Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        520
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-03-08T16:51:36.789Z"
+}
