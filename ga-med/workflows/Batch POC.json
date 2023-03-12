@@ -1,0 +1,95 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "SplitInBatches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SplitInBatches": {
+      "main": [
+        [
+          {
+            "node": "Function1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-03-12T10:05:40.527Z",
+  "id": "28",
+  "name": "Batch POC",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Code here will run only once, no matter how many input items there are.\n// More info and help: https://docs.n8n.io/nodes/n8n-nodes-base.function\n\n// Loop over inputs and add a new field called 'myNewField' to the JSON of each one\n\n\n// You can write logs to the browser console\nconsole.log('Done!');\n\nreturn [\n\t{\n\t\tjson: {\n\t\t\ttest: 1\n\t\t}\n\t},\n\t{\n\t\tjson: {\n\t\t\ttest: 2\n\t\t}\n\t},\n\t{\n\t\tjson: {\n\t\t\ttest: 3\n\t\t}\n\t},\n\t{\n\t\tjson: {\n\t\t\ttest: 4\n\t\t}\n\t},\n\t{\n\t\tjson: {\n\t\t\ttest: 5\n\t\t}\n\t},\n\t{\n\t\tjson: {\n\t\t\ttest: 6\n\t\t}\n\t},\n\t{\n\t\tjson: {\n\t\t\ttest: 7\n\t\t}\n\t},\n\t{\n\t\tjson: {\n\t\t\ttest: 1\n\t\t}\n\t},\n\t{\n\t\tjson: {\n\t\t\ttest: 2\n\t\t}\n\t},\n\t{\n\t\tjson: {\n\t\t\ttest: 3\n\t\t}\n\t},\n\t{\n\t\tjson: {\n\t\t\ttest: 4\n\t\t}\n\t},\n\t{\n\t\tjson: {\n\t\t\ttest: 5\n\t\t}\n\t},\n\t{\n\t\tjson: {\n\t\t\ttest: 6\n\t\t}\n\t},\n\t{\n\t\tjson: {\n\t\t\ttest: 7\n\t\t}\n\t}\n];"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": false
+        }
+      },
+      "name": "SplitInBatches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Code here will run only once, no matter how many input items there are.\n// More info and help: https://docs.n8n.io/nodes/n8n-nodes-base.function\n\n// Loop over inputs and add a new field called 'myNewField' to the JSON of each one\nconsole.log('Batch start...');\nfor (item of items) {\n  console.log('Batch Item...', item);\n  item.json.myNewField = 1;\n}\n\n// You can write logs to the browser console\nconsole.log('Done!');\n\nreturn items;"
+      },
+      "name": "Function1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-03-12T10:13:03.525Z"
+}
