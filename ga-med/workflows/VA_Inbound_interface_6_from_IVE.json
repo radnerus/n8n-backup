@@ -1,0 +1,316 @@
+{
+  "active": false,
+  "connections": {
+    "Trigger Scheduler": {
+      "main": [
+        [
+          {
+            "node": "Process Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Request": {
+      "main": [
+        [
+          {
+            "node": "All Referrals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "All Referrals": {
+      "main": [
+        [
+          {
+            "node": "Check end date",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IV-E Funded CHINS": {
+      "main": [
+        [
+          {
+            "node": "Assign To Case worker 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Former Assistance IV-E Funded CHINS": {
+      "main": [
+        [
+          {
+            "node": "Assign To Case worker 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assign To Case worker 1": {
+      "main": [
+        [
+          {
+            "node": "Send Email To Case Worker 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assign To Case worker 2": {
+      "main": [
+        [
+          {
+            "node": "Send Email To Case Worker 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check end date": {
+      "main": [
+        [
+          {
+            "node": "IV-E Funded CHINS",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Former Assistance IV-E Funded CHINS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-03-01T09:30:21.842Z",
+  "id": "15",
+  "name": "VA_Inbound_interface_6_from_IVE",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        }
+      },
+      "name": "Trigger Scheduler",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        120,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api-pics-qa.cardinalityai.xyz/api/org/auth/login",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "{\"email\":\"jonesarnold@cardinality.ai\",\"password\":\"Password@123\",\"secret\":\"\"}"
+      },
+      "name": "Process Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        340,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select * from \"or_case\".intake",
+        "additionalFields": {}
+      },
+      "name": "All Referrals",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        520,
+        580
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "5",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "update or_case.intake\nset type = 'Referral', category = 'Former Assistance IV-E Funded CHINS'\nwhere id  = 1;\nselect * from or_case.intake;",
+        "additionalFields": {}
+      },
+      "name": "Former Assistance IV-E Funded CHINS",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        940,
+        680
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "5",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "update or_case.intake\nset type = 'Referral', category = 'IV-E Funded CHINS'\nwhere id  = 1;",
+        "additionalFields": {}
+      },
+      "name": "IV-E Funded CHINS",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        940,
+        460
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "5",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "info@cardinality.ai",
+        "toEmail": "info@cardinality.ai",
+        "text": "Assigned",
+        "options": {}
+      },
+      "name": "Send Email To Case Worker 1",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        460
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "1",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "info@cardinality.ai",
+        "toEmail": "info@cardinality.ai",
+        "text": "Assigned",
+        "options": {}
+      },
+      "name": "Send Email To Case Worker 2",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        680
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "1",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "update or_case.intake\nset assigned_worker = 'Case Worker 1'\nwhere id  = 1;",
+        "additionalFields": {}
+      },
+      "name": "Assign To Case worker 1",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        460
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "5",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "update or_case.intake\nset assigned_worker = 'Case Worker 2'\nwhere id  = 1;\nselect * from or_case.intake;",
+        "additionalFields": {}
+      },
+      "name": "Assign To Case worker 2",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        680
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "5",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [],
+          "string": [],
+          "dateTime": [
+            {
+              "value1": "2022-12-16T11:14:32.794Z",
+              "value2": "={{$json[\"enddate\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Check end date",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        680,
+        580
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-03-01T09:30:21.842Z"
+}
