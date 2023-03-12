@@ -5,18 +5,29 @@
       "main": [
         [
           {
-            "node": "Audit Data",
+            "node": "Function",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Audit Data": {
+    "Function": {
       "main": [
         [
           {
-            "node": "Update Notification Audit ",
+            "node": "Fetch Auth Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Auth Token": {
+      "main": [
+        [
+          {
+            "node": "Update Error Status",
             "type": "main",
             "index": 0
           }
@@ -34,8 +45,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        -40,
-        160
+        -160,
+        180
       ]
     },
     {
@@ -44,26 +55,26 @@
       "type": "n8n-nodes-base.errorTrigger",
       "typeVersion": 1,
       "position": [
-        160,
-        160
+        -160,
+        40
       ]
     },
     {
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "POST",
-        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/notificationcases/saveaudit",
+        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/emailtemplate/event-process/processupdate",
         "allowUnauthorizedCerts": true,
         "jsonParameters": true,
         "options": {},
-        "bodyParametersJson": "={{JSON.stringify($json[\"data\"])}}"
+        "bodyParametersJson": "={{JSON.stringify($node[\"Function\"].json[\"data\"])}}"
       },
-      "name": "Update Notification Audit ",
+      "name": "Update Error Status",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        620,
-        160
+        340,
+        260
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -74,19 +85,35 @@
     },
     {
       "parameters": {
-        "functionCode": "var data={};\ndata.execution_id=items[0].json.execution.id;\ndata.execution_error=JSON.stringify(items[0].json.execution.error);\nlet error = items[0].json.execution.error.description;\ndata.status=\"INFRA ERROR\";\nif(error.match('Event does not exist')){\n  data.status=\"INVALID FILE\";\n}\nconsole.log(\"items \",items[0].json.execution.id);\nreturn [{json:{data}}];"
+        "functionCode": "var data={};\ndata.id=items[0].json.execution.id;\ndata.error_desc=JSON.stringify(items[0].json.execution.error);\nlet error = items[0].json.execution.error.description;\ndata.status=\"ERROR\";\nconsole.log(\"items \",items[0].json.execution.id);\nreturn [{json:{data}}];\n"
       },
-      "name": "Audit Data",
+      "name": "Function",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        360,
-        160
+        120,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/org/auth/login",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={\"email\":\"vimalathithan@cardinality.ai\",\"password\":\"Password@123\",\"secret\":\"\"}"
+      },
+      "name": "Fetch Auth Token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        320,
+        40
       ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-09T10:27:19.073Z"
+  "updatedAt": "2023-03-09T16:12:38.161Z"
 }
