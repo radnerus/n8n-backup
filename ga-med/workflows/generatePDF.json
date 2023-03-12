@@ -81,7 +81,7 @@
       "main": [
         [
           {
-            "node": "Function",
+            "node": "Audit Data",
             "type": "main",
             "index": 0
           }
@@ -145,13 +145,7 @@
     },
     "Save Event Process Item": {
       "main": [
-        [
-          {
-            "node": "Audit Data",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Function1": {
@@ -448,7 +442,7 @@
     },
     {
       "parameters": {
-        "functionCode": "//var id= $node[\"Save Audit Data\"].json.data[0].id\n//console.log(\"id \",id);\nvar status;\nif($node[\"AWS S3\"].json[\"success\"] == true){\nstatus=\"SUCCESS\";\n}else{\nstatus=\"IN PROGRESS\";\n}\nconst content = {\n  output_url:\"https://s3.us-east-1.amazonaws.com\"+\"/ga-medredtrmn-dev/\"+$node[\"Webhook\"].json[\"body\"][\"filename\"],\n  input_location:$node[\"Webhook\"].json.body.input_location\n}\nconsole.log('items', $node[\"Save Event Process Item\"].json)\nvar processItem = $node[\"Save Event Process Item\"].json.data;\nprocessItem.status = 'SUCCESS';\nprocessItem.content= JSON.stringify(content);\nprocessItem.insertedBy = new Date();\nprocessItem.updatedBy= new Date();\nreturn [{json:processItem}]\n\n"
+        "functionCode": "//var id= $node[\"Save Audit Data\"].json.data[0].id\n//console.log(\"id \",id);\nvar status;\nif($node[\"AWS S3\"].json[\"success\"] == true){\nstatus=\"SUCCESS\";\n}else{\nstatus=\"IN PROGRESS\";\n}\nconst content = {\n  output_url:\"https://s3.us-east-1.amazonaws.com\"+\"/ga-medredtrmn-dev/\"+$node[\"Webhook\"].json[\"body\"][\"filename\"],\n  input_location:$node[\"Webhook\"].json.body.input_location\n}\nconsole.log('items', $node[\"Get Data to Process\"].json)\nvar processItem = $node[\"Get Data to Process\"].json.data;\nprocessItem.status = 'SUCCESS';\nprocessItem.content= JSON.stringify(content);\nprocessItem.insertedBy = new Date();\nprocessItem.updatedBy= new Date();\nprocessItem.execution_id = $executionId;\nreturn [{json:processItem}]\n\n"
       },
       "name": "Function1",
       "type": "n8n-nodes-base.function",
@@ -478,7 +472,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "requestMethod": "PATCH",
-        "url": "=https://api-ga-medredtrmn-dev.cardinality.info/api/emailtemplate/event-process/item/{{$json[\"id\"]}}",
+        "url": "=https://api-ga-medredtrmn-dev.cardinality.info/api/address/member-match/{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}",
         "jsonParameters": true,
         "options": {},
         "bodyParametersJson": "={{JSON.stringify($json)}}"
@@ -505,5 +499,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-12T16:33:19.954Z"
+  "updatedAt": "2023-03-12T17:55:01.540Z"
 }
