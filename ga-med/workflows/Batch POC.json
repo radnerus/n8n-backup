@@ -33,6 +33,17 @@
           }
         ]
       ]
+    },
+    "Function1": {
+      "main": [
+        [
+          {
+            "node": "SplitInBatches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-03-12T10:05:40.527Z",
@@ -63,6 +74,7 @@
     },
     {
       "parameters": {
+        "batchSize": 4,
         "options": {
           "reset": false
         }
@@ -91,5 +103,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-12T10:13:03.525Z"
+  "updatedAt": "2023-03-12T12:49:17.538Z"
 }
