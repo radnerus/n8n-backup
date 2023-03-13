@@ -87,7 +87,7 @@
       "main": [
         [
           {
-            "node": "Set",
+            "node": "File Download",
             "type": "main",
             "index": 0
           }
@@ -186,56 +186,7 @@
       "main": [
         [
           {
-            "node": "HTTP Request",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request": {
-      "main": [
-        [
-          {
-            "node": "Function2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Set": {
-      "main": [
-        [
-          {
-            "node": "File Download",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Function2": {
-      "main": [
-        [
-          {
-            "node": "Postgres",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Postgres": {
-      "main": [
-        [
-          {
-            "node": "Write File Name & Event Name",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Update Event Process",
+            "node": "Address Matching",
             "type": "main",
             "index": 0
           }
@@ -247,6 +198,55 @@
         [
           {
             "node": "Trigger Generate PDF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get File Path To Move1": {
+      "main": [
+        [
+          {
+            "node": "Move Processed File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Address Matching": {
+      "main": [
+        [
+          {
+            "node": "Set Event Process ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Event Process ID": {
+      "main": [
+        [
+          {
+            "node": "Event Process Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Event Process Data": {
+      "main": [
+        [
+          {
+            "node": "Write File Name & Event Name",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update Event Process",
             "type": "main",
             "index": 0
           }
@@ -276,7 +276,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        -780,
+        -1820,
         400
       ]
     },
@@ -291,7 +291,7 @@
       "type": "n8n-nodes-base.ftp",
       "typeVersion": 1,
       "position": [
-        -560,
+        -1480,
         400
       ],
       "credentials": {
@@ -314,8 +314,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -1000,
-        400
+        -2300,
+        440
       ]
     },
     {
@@ -332,8 +332,8 @@
       "type": "n8n-nodes-base.cron",
       "typeVersion": 1,
       "position": [
-        -2400,
-        -100
+        -2600,
+        -380
       ]
     },
     {
@@ -349,7 +349,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -680,
+        -1460,
         620
       ]
     },
@@ -361,33 +361,9 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        -1000,
+        -1820,
         620
       ]
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "POST",
-        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/address/matching",
-        "allowUnauthorizedCerts": true,
-        "jsonParameters": true,
-        "options": {},
-        "bodyParametersJson": "={{JSON.stringify($node[\"Address Matching Request\"].json)}}"
-      },
-      "name": "HTTP Request",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        -540,
-        140
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "3",
-          "name": "Header Auth account"
-        }
-      }
     },
     {
       "parameters": {
@@ -401,8 +377,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -1900,
-        -100
+        -2040,
+        -380
       ]
     },
     {
@@ -416,8 +392,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -1660,
-        -100
+        -1720,
+        -380
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -436,8 +412,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -1420,
-        -100
+        -1460,
+        -380
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -457,7 +433,7 @@
       "typeVersion": 1,
       "position": [
         -1180,
-        -100
+        -380
       ],
       "credentials": {
         "sftp": {
@@ -479,8 +455,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -1900,
-        140
+        -2040,
+        -120
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -497,8 +473,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        -2120,
-        140
+        -2340,
+        -120
       ]
     },
     {
@@ -509,8 +485,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        -2360,
-        140
+        -2620,
+        -120
       ]
     },
     {
@@ -522,8 +498,8 @@
       "type": "n8n-nodes-base.ftp",
       "typeVersion": 1,
       "position": [
-        -1640,
-        140
+        -1460,
+        -120
       ],
       "credentials": {
         "sftp": {
@@ -540,8 +516,8 @@
       "type": "n8n-nodes-base.spreadsheetFile",
       "typeVersion": 1,
       "position": [
-        -1380,
-        140
+        -1200,
+        -120
       ]
     },
     {
@@ -558,8 +534,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -640,
-        -320
+        -940,
+        100
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -597,20 +573,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        -2140,
-        -100
-      ]
-    },
-    {
-      "parameters": {
-        "functionCode": "let payload={};\nitems.map(item=>{\n  item.json.data[0].status=\"IN PROGRESS\";\n  item.json.data[0].eventid=\"1\";\n  item.json.data[0].externalid= items[0].json.data.Case_id;\n  item.json.data[0].executionid=$executionId;\n  item.json.data[0].channel= \"PRINT\";\n  //item.json.data[0].payload= items[0].json.data;\n  item.json.data[0].eventprocessid= items[0].json.data.event_process_id;\n})\n\nreturn items\n"
-      },
-      "name": "Function",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        -1280,
-        620
+        -2320,
+        -380
       ]
     },
     {
@@ -627,7 +591,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -920,
+        -2340,
         140
       ],
       "credentials": {
@@ -638,16 +602,6 @@
       }
     },
     {
-      "parameters": {},
-      "name": "Merge",
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 1,
-      "position": [
-        -2140,
-        -340
-      ]
-    },
-    {
       "parameters": {
         "functionCode": "//console.log('item', items)\nvar data= [];\nitems.map(item=>{\nvar itemdata = {\nstatus: \"IN PROGRESS\",\neventid: \"1\",\nexternalid:  item.json.Client_id,\nexecutionid: $executionId,\nchannel: \"PRINT\",\npayload: item.json,\neventprocessid: $node[\"Save Event Process\"].json.data.id\n}\ndata.push(itemdata);\n})\n\nreturn data.map(item => {\n    return {\"json\": item};\n});\n\n"
       },
@@ -655,7 +609,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        -1140,
+        -2620,
         140
       ]
     },
@@ -667,7 +621,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        -720,
+        -2040,
         140
       ]
     },
@@ -679,29 +633,44 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        -1320,
-        400
+        -2600,
+        420
       ]
     },
     {
       "parameters": {
-        "keepOnlySet": true,
-        "values": {
-          "number": [
-            {
-              "name": "event_process_id",
-              "value": "={{$node[\"Save Event Process\"].json[\"data\"][\"id\"]}}"
-            }
-          ]
-        },
-        "options": {}
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/address/matching",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{JSON.stringify($node[\"Address Matching Request\"].json)}}"
       },
-      "name": "Set",
-      "type": "n8n-nodes-base.set",
+      "name": "Address Matching",
+      "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -1960,
-        520
+        -1700,
+        140
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "return [{json: {event_process_id : $node[\"Save Event Process\"].json.data.id}}]"
+      },
+      "name": "Set Event Process ID",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -1440,
+        140
       ]
     },
     {
@@ -712,11 +681,11 @@
           "queryParams": "="
         }
       },
-      "name": "Postgres",
+      "name": "Event Process Data",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 1,
       "position": [
-        -180,
+        -1180,
         140
       ],
       "credentials": {
@@ -725,22 +694,10 @@
           "name": "Postgres account"
         }
       }
-    },
-    {
-      "parameters": {
-        "functionCode": "return [{json: {event_process_id : $node[\"Save Event Process\"].json.data.id}}]"
-      },
-      "name": "Function2",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        -360,
-        140
-      ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-13T06:43:27.384Z"
+  "updatedAt": "2023-03-13T07:57:49.496Z"
 }
