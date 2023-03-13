@@ -70,7 +70,7 @@
       "main": [
         [
           {
-            "node": "fetchTemplate",
+            "node": "Get Data to Process1",
             "type": "main",
             "index": 0
           }
@@ -121,17 +121,6 @@
         ]
       ]
     },
-    "Function": {
-      "main": [
-        [
-          {
-            "node": "Save Event Process Item",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Fetch Auth Token": {
       "main": [
         [
@@ -176,16 +165,22 @@
         ]
       ]
     },
-    "Fetch Auth Token1": {
-      "main": [
-        []
-      ]
-    },
     "HTTP Request1": {
       "main": [
         [
           {
             "node": "Get Data to Process",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Data to Process1": {
+      "main": [
+        [
+          {
+            "node": "fetchTemplate",
             "type": "main",
             "index": 0
           }
@@ -253,7 +248,7 @@
         "allowUnauthorizedCerts": true,
         "jsonParameters": true,
         "options": {},
-        "bodyParametersJson": "={{JSON.stringify({data:[$node[\"Get Data to Process\"].json[\"data\"]]})}}"
+        "bodyParametersJson": "={{JSON.stringify({data:[$node[\"Get Data to Process1\"].json[\"data\"]]})}}"
       },
       "name": "fetchTemplate",
       "type": "n8n-nodes-base.httpRequest",
@@ -429,41 +424,6 @@
     },
     {
       "parameters": {
-        "functionCode": "items[0].json.status=\"IN PROGRESS\";\nitems[0].json.eventid=\"1\";\nitems[0].json.externalid= items[0].json.data.Case_id;\nitems[0].json.executionid=$executionId;\nitems[0].json.channel= \"PRINT\";\nitems[0].json.payload= items[0].json.data;\nitems[0].json.eventprocessid= items[0].json.data.event_process_id;\nconsole.log(\"execution_id \",$executionId);\nreturn items\n"
-      },
-      "name": "Function",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        -240,
-        -340
-      ]
-    },
-    {
-      "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "POST",
-        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/emailtemplate/event-process/item",
-        "jsonParameters": true,
-        "options": {},
-        "bodyParametersJson": "={{JSON.stringify($json)}}"
-      },
-      "name": "Save Event Process Item",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        -40,
-        -340
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "3",
-          "name": "Header Auth account"
-        }
-      }
-    },
-    {
-      "parameters": {
         "functionCode": "//var id= $node[\"Save Audit Data\"].json.data[0].id\n//console.log(\"id \",id);\nvar status;\nif($node[\"AWS S3\"].json[\"success\"] == true){\nstatus=\"SUCCESS\";\n}else{\nstatus=\"IN PROGRESS\";\n}\nconst content = {\n  output_url:\"https://s3.us-east-1.amazonaws.com\"+\"/ga-medredtrmn-dev/\"+$node[\"Webhook\"].json[\"body\"][\"filename\"],\n  input_location:$node[\"Webhook\"].json.body.input_location\n}\nconsole.log('items', $node[\"Get Data to Process\"].json)\nvar processItem = $node[\"Get Data to Process\"].json.data;\nprocessItem.status = 'SUCCESS';\nprocessItem.content= JSON.stringify(content);\nprocessItem.insertedBy = new Date();\nprocessItem.updatedBy= new Date();\nprocessItem.execution_id = $executionId;\nreturn [{json:processItem}]\n\n"
       },
       "name": "Function1",
@@ -550,18 +510,14 @@
     },
     {
       "parameters": {
-        "requestMethod": "POST",
-        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/org/auth/login",
-        "jsonParameters": true,
-        "options": {},
-        "bodyParametersJson": "{\"email\":\"vimalathithan@cardinality.ai\",\"password\":\"Password@123\",\"secret\":\"\"}"
+        "functionCode": "\n\n$node[\"Webhook\"].json.body.payload[\"status\"] = $node[\"Webhook\"].json.body.status\n$node[\"Webhook\"].json.body.payload[\"current_date\"] = new Date().toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: 'numeric'});\nreturn [{json:{data:$node[\"Webhook\"].json.body.payload}}]"
       },
-      "name": "Fetch Auth Token1",
-      "type": "n8n-nodes-base.httpRequest",
+      "name": "Get Data to Process1",
+      "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        -900,
-        -400
+        -1200,
+        100
       ]
     }
   ],
@@ -572,5 +528,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-13T06:41:43.959Z"
+  "updatedAt": "2023-03-13T07:50:06.104Z"
 }
