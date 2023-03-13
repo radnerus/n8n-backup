@@ -21,23 +21,12 @@
             "index": 0
           },
           {
-            "node": "AWS S31",
+            "node": "Download From S3",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Function1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AWS S31": {
-      "main": [
-        [
-          {
-            "node": "Write Binary File",
+            "node": "Set Update Data",
             "type": "main",
             "index": 0
           }
@@ -125,18 +114,7 @@
       "main": [
         [
           {
-            "node": "Function11",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Function1": {
-      "main": [
-        [
-          {
-            "node": "HTTP Request",
+            "node": "Set Execution ID",
             "type": "main",
             "index": 0
           }
@@ -154,18 +132,29 @@
         ]
       ]
     },
-    "Function11": {
+    "Get Data to Process1": {
       "main": [
         [
           {
-            "node": "HTTP Request1",
+            "node": "fetchTemplate",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "HTTP Request1": {
+    "Set Execution ID": {
+      "main": [
+        [
+          {
+            "node": "Update Execution ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Execution ID": {
       "main": [
         [
           {
@@ -176,11 +165,22 @@
         ]
       ]
     },
-    "Get Data to Process1": {
+    "Set Update Data": {
       "main": [
         [
           {
-            "node": "fetchTemplate",
+            "node": "Update Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download From S3": {
+      "main": [
+        [
+          {
+            "node": "Write Binary File",
             "type": "main",
             "index": 0
           }
@@ -261,25 +261,6 @@
         "httpHeaderAuth": {
           "id": "3",
           "name": "Header Auth account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "bucketName": "ga-medredtrmn-dev",
-        "fileKey": "={{$node[\"Webhook\"].json[\"body\"][\"file_name\"]}}"
-      },
-      "name": "AWS S31",
-      "type": "n8n-nodes-base.awsS3",
-      "typeVersion": 1,
-      "position": [
-        -860,
-        340
-      ],
-      "credentials": {
-        "aws": {
-          "id": "4",
-          "name": "AWS account"
         }
       }
     },
@@ -424,18 +405,6 @@
     },
     {
       "parameters": {
-        "functionCode": "//var id= $node[\"Save Audit Data\"].json.data[0].id\n//console.log(\"id \",id);\nvar status;\nif($node[\"AWS S3\"].json[\"success\"] == true){\nstatus=\"SUCCESS\";\n}else{\nstatus=\"IN PROGRESS\";\n}\nconst content = {\n  output_url:\"https://s3.us-east-1.amazonaws.com\"+\"/ga-medredtrmn-dev/\"+$node[\"Webhook\"].json[\"body\"][\"filename\"],\n  input_location:$node[\"Webhook\"].json.body.input_location\n}\nconsole.log('items', $node[\"Get Data to Process\"].json)\nvar processItem = $node[\"Get Data to Process\"].json.data;\nprocessItem.status = 'SUCCESS';\nprocessItem.content= JSON.stringify(content);\nprocessItem.insertedBy = new Date();\nprocessItem.updatedBy= new Date();\nprocessItem.execution_id = $executionId;\nreturn [{json:processItem}]\n\n"
-      },
-      "name": "Function1",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        -60,
-        300
-      ]
-    },
-    {
-      "parameters": {
         "requestMethod": "POST",
         "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/org/auth/login",
         "jsonParameters": true,
@@ -452,32 +421,21 @@
     },
     {
       "parameters": {
-        "authentication": "headerAuth",
-        "requestMethod": "PATCH",
-        "url": "=https://api-ga-medredtrmn-dev.cardinality.info/api/address/member-match/{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}",
-        "jsonParameters": true,
-        "options": {},
-        "bodyParametersJson": "={{JSON.stringify($json)}}"
+        "functionCode": "\n\n$node[\"Webhook\"].json.body.payload[\"status\"] = $node[\"Webhook\"].json.body.status\n$node[\"Webhook\"].json.body.payload[\"current_date\"] = new Date().toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: 'numeric'});\nreturn [{json:{data:$node[\"Webhook\"].json.body.payload}}]"
       },
-      "name": "HTTP Request",
-      "type": "n8n-nodes-base.httpRequest",
+      "name": "Get Data to Process1",
+      "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        160,
-        300
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "3",
-          "name": "Header Auth account"
-        }
-      }
+        -1200,
+        100
+      ]
     },
     {
       "parameters": {
         "functionCode": "//var id= $node[\"Save Audit Data\"].json.data[0].id\n//console.log(\"id \",id);\nvar status;\n\nstatus=\"IN PROGRESS\";\nvar processItem = $node[\"Webhook\"].json.body;\n//processItem.status = 'SUCCESS';\nprocessItem.content= '';\nprocessItem.insertedBy = new Date();\nprocessItem.updatedBy= new Date();\nprocessItem.execution_id = $executionId;\nreturn [{json:processItem}]\n\n"
       },
-      "name": "Function11",
+      "name": "Set Execution ID",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
@@ -494,7 +452,7 @@
         "options": {},
         "bodyParametersJson": "={{JSON.stringify($json)}}"
       },
-      "name": "HTTP Request1",
+      "name": "Update Execution ID",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
@@ -510,15 +468,57 @@
     },
     {
       "parameters": {
-        "functionCode": "\n\n$node[\"Webhook\"].json.body.payload[\"status\"] = $node[\"Webhook\"].json.body.status\n$node[\"Webhook\"].json.body.payload[\"current_date\"] = new Date().toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: 'numeric'});\nreturn [{json:{data:$node[\"Webhook\"].json.body.payload}}]"
+        "functionCode": "//var id= $node[\"Save Audit Data\"].json.data[0].id\n//console.log(\"id \",id);\nvar status;\nif($node[\"AWS S3\"].json[\"success\"] == true){\nstatus=\"SUCCESS\";\n}else{\nstatus=\"IN PROGRESS\";\n}\nconst content = {\n  output_url:\"https://s3.us-east-1.amazonaws.com\"+\"/ga-medredtrmn-dev/\"+$node[\"Webhook\"].json[\"body\"][\"filename\"],\n  input_location:$node[\"Webhook\"].json.body.input_location\n}\nconsole.log('items', $node[\"Get Data to Process\"].json)\nvar processItem = $node[\"Get Data to Process\"].json.data;\nprocessItem.status = 'SUCCESS';\nprocessItem.content= JSON.stringify(content);\nprocessItem.insertedBy = new Date();\nprocessItem.updatedBy= new Date();\nprocessItem.execution_id = $executionId;\nreturn [{json:processItem}]\n\n"
       },
-      "name": "Get Data to Process1",
+      "name": "Set Update Data",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        -1200,
-        100
+        -60,
+        300
       ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "PATCH",
+        "url": "=https://api-ga-medredtrmn-dev.cardinality.info/api/address/member-match/{{$node[\"Webhook\"].json[\"body\"][\"id\"]}}",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{JSON.stringify($json)}}"
+      },
+      "name": "Update Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        160,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "bucketName": "ga-medredtrmn-dev",
+        "fileKey": "={{$node[\"Webhook\"].json[\"body\"][\"file_name\"]}}"
+      },
+      "name": "Download From S3",
+      "type": "n8n-nodes-base.awsS3",
+      "typeVersion": 1,
+      "position": [
+        -860,
+        340
+      ],
+      "credentials": {
+        "aws": {
+          "id": "4",
+          "name": "AWS account"
+        }
+      }
     }
   ],
   "settings": {
@@ -528,5 +528,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-13T08:37:49.061Z"
+  "updatedAt": "2023-03-13T08:54:32.013Z"
 }
