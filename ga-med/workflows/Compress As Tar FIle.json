@@ -219,8 +219,8 @@
       "type": "n8n-nodes-base.awsS3",
       "typeVersion": 1,
       "position": [
-        600,
-        420
+        620,
+        400
       ],
       "credentials": {
         "aws": {
@@ -290,7 +290,7 @@
       "type": "n8n-nodes-base.moveBinaryData",
       "typeVersion": 1,
       "position": [
-        600,
+        620,
         200
       ]
     },
@@ -321,6 +321,7 @@
     },
     {
       "parameters": {
+        "amount": 0.1,
         "unit": "minutes"
       },
       "name": "Wait",
@@ -416,7 +417,7 @@
       "typeVersion": 1,
       "position": [
         360,
-        420
+        400
       ]
     },
     {
@@ -435,13 +436,13 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        140,
-        200
+        160,
+        320
       ]
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-13T08:37:22.467Z"
+  "updatedAt": "2023-03-13T10:24:05.895Z"
 }
