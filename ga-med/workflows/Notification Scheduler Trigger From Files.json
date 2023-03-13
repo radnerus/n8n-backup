@@ -236,7 +236,7 @@
     },
     {
       "parameters": {
-        "functionCode": "items = items.filter(item => item.json.type !== \"d\");\nreturn items;"
+        "functionCode": "const filteredFiles = [];\n\nfor (const file of items) {\n  if (file.json.name.endsWith('.xlsx')) {\n    filteredFiles.push(file);\n  }\n}\n\nreturn filteredFiles;\n"
       },
       "name": "Get File Path",
       "type": "n8n-nodes-base.function",
@@ -527,5 +527,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-09T16:18:04.228Z"
+  "updatedAt": "2023-03-13T04:13:56.774Z"
 }
