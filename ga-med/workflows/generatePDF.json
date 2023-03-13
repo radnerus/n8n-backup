@@ -141,7 +141,7 @@
             "index": 0
           },
           {
-            "node": "Function11",
+            "node": "HTTP Request1",
             "type": "main",
             "index": 0
           }
@@ -164,6 +164,11 @@
         [
           {
             "node": "Fetch Auth Token",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Function11",
             "type": "main",
             "index": 0
           }
@@ -192,8 +197,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        -1060,
-        -280
+        -1160,
+        -320
       ]
     },
     {
@@ -370,7 +375,7 @@
       "typeVersion": 1,
       "position": [
         -480,
-        -100
+        -120
       ]
     },
     {
@@ -424,7 +429,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        -240,
+        -160,
         -340
       ]
     },
@@ -441,8 +446,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -40,
-        -340
+        40,
+        -320
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -476,7 +481,7 @@
       "typeVersion": 1,
       "position": [
         -740,
-        -100
+        -120
       ]
     },
     {
@@ -510,8 +515,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        -780,
-        -300
+        -840,
+        -320
       ]
     },
     {
@@ -528,7 +533,7 @@
       "typeVersion": 1,
       "position": [
         -540,
-        -300
+        -320
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -545,5 +550,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-13T04:44:31.446Z"
+  "updatedAt": "2023-03-13T05:49:57.280Z"
 }
