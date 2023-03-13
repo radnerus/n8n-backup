@@ -136,12 +136,7 @@
       "main": [
         [
           {
-            "node": "Get Data to Process",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "HTTP Request1",
+            "node": "Function11",
             "type": "main",
             "index": 0
           }
@@ -166,11 +161,6 @@
             "node": "Fetch Auth Token",
             "type": "main",
             "index": 0
-          },
-          {
-            "node": "Function11",
-            "type": "main",
-            "index": 0
           }
         ]
       ]
@@ -180,6 +170,22 @@
         [
           {
             "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Auth Token1": {
+      "main": [
+        []
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Get Data to Process",
             "type": "main",
             "index": 0
           }
@@ -197,8 +203,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        -1160,
-        -320
+        -1100,
+        -340
       ]
     },
     {
@@ -253,7 +259,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -1040,
+        -1020,
         100
       ],
       "credentials": {
@@ -320,8 +326,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -40,
-        -100
+        100,
+        -120
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -338,8 +344,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        -200,
-        -100
+        -100,
+        -120
       ]
     },
     {
@@ -374,7 +380,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        -480,
+        -280,
         -120
       ]
     },
@@ -429,7 +435,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        -160,
+        -240,
         -340
       ]
     },
@@ -446,8 +452,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        40,
-        -320
+        -40,
+        -340
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -480,7 +486,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -740,
+        -820,
         -120
       ]
     },
@@ -509,14 +515,14 @@
     },
     {
       "parameters": {
-        "functionCode": "//var id= $node[\"Save Audit Data\"].json.data[0].id\n//console.log(\"id \",id);\nvar status;\n\nstatus=\"IN PROGRESS\";\nvar processItem = $node[\"Webhook\"].json.body;\nprocessItem.status = 'SUCCESS';\nprocessItem.content= '';\nprocessItem.insertedBy = new Date();\nprocessItem.updatedBy= new Date();\nprocessItem.execution_id = $executionId;\nreturn [{json:processItem}]\n\n"
+        "functionCode": "//var id= $node[\"Save Audit Data\"].json.data[0].id\n//console.log(\"id \",id);\nvar status;\n\nstatus=\"IN PROGRESS\";\nvar processItem = $node[\"Webhook\"].json.body;\n//processItem.status = 'SUCCESS';\nprocessItem.content= '';\nprocessItem.insertedBy = new Date();\nprocessItem.updatedBy= new Date();\nprocessItem.execution_id = $executionId;\nreturn [{json:processItem}]\n\n"
       },
       "name": "Function11",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        -840,
-        -320
+        -640,
+        -120
       ]
     },
     {
@@ -532,8 +538,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -540,
-        -320
+        -460,
+        -120
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -541,6 +547,22 @@
           "name": "Header Auth account"
         }
       }
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api-ga-medredtrmn-dev.cardinality.info/api/org/auth/login",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "{\"email\":\"vimalathithan@cardinality.ai\",\"password\":\"Password@123\",\"secret\":\"\"}"
+      },
+      "name": "Fetch Auth Token1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -900,
+        -400
+      ]
     }
   ],
   "settings": {
@@ -550,5 +572,5 @@
   },
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-13T05:49:57.280Z"
+  "updatedAt": "2023-03-13T06:41:43.959Z"
 }
