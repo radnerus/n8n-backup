@@ -470,6 +470,10 @@
             {
               "name": "eventname",
               "value": "Renewal Template New"
+            },
+            {
+              "name": "email_id",
+              "value": "ayyappan.kathirvel@particleblack.com"
             }
           ]
         },
@@ -669,11 +673,11 @@
     {
       "parameters": {
         "requestMethod": "POST",
-        "url": "https://ga-medredtrmn-n8n-dev.cardinality.info/webhook/trigger/compresspdf",
+        "url": "https://ga-medredtrmn-n8n-dev.cardinality.info/webhook-test/trigger/compresspdf",
         "allowUnauthorizedCerts": true,
         "jsonParameters": true,
         "options": {},
-        "bodyParametersJson": "={\n\"event_name\": \"{{$node[\"Configure Event Name\"].json[\"eventname\"]}}\",\n\"id\":\"{{$node[\"Save Event Process\"].json[\"data\"][\"id\"]}}\"\n}"
+        "bodyParametersJson": "={\n\"event_name\": \"{{$node[\"Configure Event Name\"].json[\"eventname\"]}}\",\n\"id\":\"{{$node[\"Save Event Process\"].json[\"data\"][\"id\"]}}\"\n\"email_id\": {{$node[\"Configure Event Name\"].json[\"email_id\"]}}\n}"
       },
       "name": "Trigger Compress As Tar Flow",
       "type": "n8n-nodes-base.httpRequest",
@@ -699,5 +703,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-13T09:42:03.073Z"
+  "updatedAt": "2023-03-14T05:57:32.775Z"
 }
