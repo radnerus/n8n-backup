@@ -175,6 +175,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     }
@@ -219,7 +226,7 @@
       "type": "n8n-nodes-base.awsS3",
       "typeVersion": 1,
       "position": [
-        620,
+        600,
         400
       ],
       "credentials": {
@@ -290,7 +297,7 @@
       "type": "n8n-nodes-base.moveBinaryData",
       "typeVersion": 1,
       "position": [
-        620,
+        600,
         200
       ]
     },
@@ -321,7 +328,6 @@
     },
     {
       "parameters": {
-        "amount": 0.1,
         "unit": "minutes"
       },
       "name": "Wait",
@@ -416,7 +422,7 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        360,
+        400,
         400
       ]
     },
@@ -436,13 +442,35 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        160,
-        320
+        140,
+        200
       ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "Admin",
+        "toEmail": "ayyappan.kathirvel@particleblack.com",
+        "subject": "test",
+        "text": "Test",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        160,
+        460
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "1",
+          "name": "SMTP account"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-13T10:24:05.895Z"
+  "updatedAt": "2023-03-14T05:53:54.700Z"
 }
